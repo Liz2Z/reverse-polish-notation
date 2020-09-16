@@ -19,10 +19,10 @@ function pop(count) {
  */
 // TODO: trim  剔除模板中的空格换行等
 function parse(template) {
-  // 操作符栈
+  // 临时存放的操作符栈
   const operatorStack = [];
-  // 数值栈
-  const digitStack = [];
+  // 结果栈
+  const resultStack = [];
   // 每个括号就是一个单独的作用域，需要存储自己的状态
   const scopeStack = [
     {
@@ -39,7 +39,7 @@ function parse(template) {
       operatorStack.length - scope.index
     );
 
-    digitStack.push(...operators);
+    resultStack.push(...operators);
 
     scope.hasMinusSign = false;
   };
@@ -59,7 +59,7 @@ function parse(template) {
     switch (match) {
       case "+": {
         // 核心就在于当当前的操作符权重小于操作符栈的权重时，将操作符
-        // 栈中的数据取出，压入digitStack
+        // 栈中的数据取出，压入resultStack
         if (scope.stackPriority > 0 || scope.hasMinusSign) {
           resetStack();
         }
@@ -101,7 +101,7 @@ function parse(template) {
       }
       default: {
         // 数值
-        digitStack.push(match);
+        resultStack.push(match);
         break;
       }
     }
@@ -115,7 +115,7 @@ function parse(template) {
     throw Error("存在未闭合的(，计算模板不合法");
   }
 
-  return digitStack;
+  return resultStack;
 }
 
 /**
