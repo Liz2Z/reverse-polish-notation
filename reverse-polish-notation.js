@@ -24,6 +24,7 @@ function parse(template) {
   // 结果栈
   const resultStack = [];
   // 每个括号就是一个单独的作用域，需要存储自己的状态
+  // TODO: 可以不用这个栈
   const scopeStack = [
     {
       hasMinusSign: false,
